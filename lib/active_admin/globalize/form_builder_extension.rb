@@ -9,13 +9,15 @@ module ActiveAdmin
         auto_sort = options.fetch(:auto_sort, true)
         form_buffers.last << template.content_tag(:div, class: "activeadmin-translations") do
           template.content_tag(:ul, class: "available-locales") do
-            (auto_sort ? I18n.available_locales.sort : I18n.available_locales).map do |locale|
-              template.content_tag(:li) do
-                I18n.with_locale(switch_locale ? locale : I18n.locale) do
-                  template.content_tag(:a, I18n.t(:"active_admin.globalize.language.#{locale}"), href:".locale-#{locale}")
+            if I18n.available_locales.size > 1
+              (auto_sort ? I18n.available_locales.sort : I18n.available_locales).map do |locale|
+                template.content_tag(:li) do
+                  I18n.with_locale(switch_locale ? locale : I18n.locale) do
+                    template.content_tag(:a, I18n.t(:"active_admin.globalize.language.#{locale}"), href:".locale-#{locale}")
+                  end
                 end
-              end
-            end.join.html_safe
+              end.join.html_safe
+            end  
           end <<
           (auto_sort ? I18n.available_locales.sort : I18n.available_locales).map do |locale|
             translation = object.translations.find { |t| t.locale.to_s == locale.to_s }
